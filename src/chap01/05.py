@@ -1,7 +1,8 @@
 def make_ngram(sentence, n):
-    assert n <= len(sentence)
 
-    return [sentence[ind:ind + n] for ind in range(len(sentence) - n + 1)]
+    return [
+        ''.join(sentence[ind:ind + n]) for ind in range(len(sentence) - n + 1)
+    ]
 
 
 if __name__ == '__main__':
