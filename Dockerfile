@@ -9,12 +9,12 @@ ENV CABOCHA_VERSION 0.69
 COPY requirements.txt /tmp
 
 RUN apt-get update && apt-get install -y \
-    build-essential git wget curl tar gzip file sudo zlib1g-dev && \
+    build-essential git wget curl tar gzip file sudo zlib1g-dev unzip &&\
     # python install
-    apt-get install -y python3.8 python3.8-venv python3-pip && \
-    cd /usr/local && \
+    apt-get install -y python3.8 python3.8-venv python3-pip &&\
+    cd /usr/local &&\
     # Python Libraries
-    pip install --upgrade pip && \
+    pip install --upgrade pip &&\
     pip install --no-cache-dir -r /tmp/requirements.txt &&\
     # MeCab
     apt-get install -y mecab libmecab-dev mecab-ipadic mecab-ipadic-utf8 swig &&\
@@ -35,20 +35,16 @@ RUN apt-get update && apt-get install -y \
     ldconfig &&\
     # Cabocha
     cd /tmp &&\
-    curl -c cabocha-${CABOCHA_VERSION}.tar.bz2 -s -L "https://drive.google.com/uc?export=download&id=0B4y35FiV1wh7SDd1Q1dUQkZQaUU" \
-    | grep confirm | sed -e "s/^.*confirm=\(.*\)&amp;id=.*$/\1/" \
-    | xargs -I{} curl -b  cabocha-${CABOCHA_VERSION}.tar.bz2 -L -o cabocha-${CABOCHA_VERSION}.tar.bz2 \
+    curl -c cabocha-${CABOCHA_VERSION}.tar.bz2 -s -L "https://drive.google.com/uc?export=download&id=0B4y35FiV1wh7SDd1Q1dUQkZQaUU" | grep confirm | sed -e "s/^.*confirm=\(.*\)&amp;id=.*$/\1/" |xargs -I{} curl -b cabocha-${CABOCHA_VERSION}.tar.bz2 -L -o cabocha-${CABOCHA_VERSION}.tar.bz2 \
     "https://drive.google.com/uc?confirm={}&export=download&id=0B4y35FiV1wh7SDd1Q1dUQkZQaUU" &&\
     tar jxf cabocha-${CABOCHA_VERSION}.tar.bz2 &&\
     cd cabocha-${CABOCHA_VERSION} &&\
     export CPPFLAGS=-I/usr/local/include &&\
-    ./configure --with-mecab-config=`which mecab-config` --with-charset=utf8 &&\
+    ./configure --with-mecab-config=$(which mecab-config) --with-charset=utf8 &&\
     make &&\
     make install &&\
     rm /tmp/cabocha-${CABOCHA_VERSION}.tar.bz2 &&\
     rm -rf /tmp/cabocha-${CABOCHA_VERSION} &&\
     ldconfig　
-
-
 
 CMD ["/bin/bash"]
