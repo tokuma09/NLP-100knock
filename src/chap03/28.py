@@ -1,4 +1,4 @@
-from utils import load_UK_article, remove_emphasis, remove_inner_link
+from utils import load_UK_article, remove_emphasis
 import re
 
 
@@ -11,14 +11,15 @@ def remove_markup(value):
     # 強調系
     em_pattern = re.compile(r'\'+')
     # リンク関連
-    file_pattern = re.compile(r'\[\[(File|ファイル):(.+?\||)(.*)\}\}')
-    link_pattern = re.compile(r'\[\[(.+\||)(.+?)\]\]')
+    link_pattern = re.compile(r'\[\[(.*\||)(.*)\]\]')
+    file_pattern = re.compile(r'\[\[(File|ファイル):(.+?\||)(.*)\}?\}?')
+
     # 削除
     value = re.sub(lang_pattern, r'\2', value)
     value = re.sub(ref_pattern, '', value)
     value = re.sub(em_pattern, '', value)
-    value = re.sub(file_pattern, r'\2', value)
     value = re.sub(link_pattern, r'\2', value)
+    value = re.sub(file_pattern, r'\3', value)
     return value
 
 
@@ -40,6 +41,5 @@ if __name__ == '__main__':
 
     # 強調表現を除く
     res = remove_emphasis(res)
-    res = remove_inner_link(res)
     for key, value in res.items():
         print(key, ':', value)
