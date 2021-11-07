@@ -4,8 +4,7 @@
 
 ## 環境
 詳細はDockerfile参照
-- OSイメージ: Ubuntu 20.04
-- Python: 3.8.10
-- 形態素解析ツール: MeCab
-    - 辞書: mecab-ipadic-NEologd
-- 係り受け解析ツール: CaboCha(v 0.69)
+- イメージ: Python:3.9.7-buster
+- 形態素解析ツール: MeCab, ginza
+    - 辞書: ipadic
+- 係り受け解析ツール: CaboCha(v 0.69), ginza

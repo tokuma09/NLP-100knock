@@ -1,8 +1,8 @@
-FROM ubuntu:20.04
+FROM python:3.9.7-buster
 LABEL maintainer="Tokuma Suzuki tokuma.suzuki09@gmail.com"
 
 ENV SHELL /bin/bash
-ENV DEBIAN_FRONTEND noninteractive
+
 ENV CRF_VERSION 0.58
 ENV CABOCHA_VERSION 0.69
 
@@ -10,18 +10,8 @@ COPY requirements.txt /tmp
 
 RUN apt-get update && apt-get install -y \
     build-essential git wget curl tar gzip file sudo zlib1g-dev unzip &&\
-    # python install
-    apt-get install -y python3.8 python3.8-venv python3-pip &&\
-    cd /usr/local &&\
-    # Python Libraries
-    pip install --upgrade pip &&\
-    pip install --no-cache-dir -r /tmp/requirements.txt &&\
     # MeCab
     apt-get install -y mecab libmecab-dev mecab-ipadic mecab-ipadic-utf8 swig &&\
-    # mecab-ipadic-neologd
-    git clone --depth 1 https://github.com/neologd/mecab-ipadic-neologd.git /tmp/neologd &&\
-    /tmp/neologd/bin/install-mecab-ipadic-neologd -n -a -y -p /usr/lib/mecab/dic/mecab-ipadic-neologd &&\
-    rm -rf /tmp/neologd &&\
     # CRF ++ (for CaboCha)
     wget -O /tmp/CRF++-${CRF_VERSION}.tar.gz 'https://drive.google.com/uc?export=download&id=0B4y35FiV1wh7QVR6VXJ5dWExSTQ' &&\
     cd /tmp/ &&\
@@ -46,5 +36,10 @@ RUN apt-get update && apt-get install -y \
     rm /tmp/cabocha-${CABOCHA_VERSION}.tar.bz2 &&\
     rm -rf /tmp/cabocha-${CABOCHA_VERSION} &&\
     ldconfig　
+
+RUN cd $HOME &&\
+    # Python Libraries
+    pip install --upgrade pip &&\
+    pip install --no-cache-dir -r /tmp/requirements.txt
 
 CMD ["/bin/bash"]
