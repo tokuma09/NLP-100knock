@@ -22,3 +22,24 @@ def remove_inner_link(res):
     # 最初の()は記事名|があれば記事名|に、そうでなければ、空文字にマッチさせる
     pattern = re.compile(r'\[\[(.*\||)(.*)\]\]')
     return {key: re.sub(pattern, r'\2', value) for key, value in res.items()}
+
+
+def remove_markup(value):
+
+    # 言語系
+    lang_pattern = re.compile(r'{{(.*\||)(.*?)}}')
+    # 参照系
+    ref_pattern = re.compile(r'<(.*)>')
+    # 強調系
+    em_pattern = re.compile(r'\'+')
+    # リンク関連
+    link_pattern = re.compile(r'\[\[(.*\||)(.*)\]\]')
+    file_pattern = re.compile(r'\[\[(File|ファイル):(.+?\||)(.*)\}?\}?')
+
+    # 削除
+    value = re.sub(lang_pattern, r'\2', value)
+    value = re.sub(ref_pattern, '', value)
+    value = re.sub(em_pattern, '', value)
+    value = re.sub(link_pattern, r'\2', value)
+    value = re.sub(file_pattern, r'\3', value)
+    return value
